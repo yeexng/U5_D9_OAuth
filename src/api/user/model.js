@@ -5,15 +5,17 @@ const { Schema, model } = mongoose;
 
 const usersSchema = new Schema(
   {
-    userName: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     role: {
       type: String,
       required: true,
       enum: ["Admin", "User"],
       default: "User",
     },
+    googleId: { type: String },
   },
   { timestamps: true }
 );

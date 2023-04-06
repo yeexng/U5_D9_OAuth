@@ -2,7 +2,7 @@ import Express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
-
+import passport from "passport";
 import {
   forbiddenErrorHandler,
   genericErrorHandler,
@@ -12,13 +12,17 @@ import {
 import blogPostsRouter from "./api/blogPosts/index.js";
 import authorsRouter from "./api/authors/index.js";
 import usersRouter from "./api/user/index.js";
+import googleStrategy from "./lib/auth/googleOauth.js";
 
 const server = Express();
 const port = process.env.PORT || 3005;
 
+passport.use("google", googleStrategy); // Do not forget to inform Passport that we want to use Google Strategy!
+
 // ************************************* MIDDLEWARES **********************************
 server.use(cors());
 server.use(Express.json());
+server.use(passport.initialize()); // Do not forget to inform Express that we are using Passport!
 
 // ************************************** ENDPOINTS ***********************************
 server.use("/blogPosts", blogPostsRouter);

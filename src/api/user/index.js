@@ -1,10 +1,29 @@
 import express from "express";
 import createError from "http-errors";
 import UsersModel from "./model.js";
+import passport from "passport";
 import { JWTAuthMiddleware } from "../../lib/auth/jwt.js";
 import { createAccessToken } from "../../lib/auth/tools.js";
 
 const usersRouter = express.Router();
+
+usersRouter.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+usersRouter.get(
+  "/googleRedirect",
+  passport.authenticate("google", { session: false }),
+  (req, res, next) => {
+    try {
+      res.redirect(`${process.env.FE_URL}?accessToken=${req.user.accessToken}`);
+      // res.send(req.user.accessToken);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 usersRouter.post("/", async (req, res, next) => {
   try {
